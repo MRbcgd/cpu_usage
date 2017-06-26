@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Server Monitoring</title>
+
+
+  <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+</head>
+
+<body>
+  <br><br>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <canvas id="myChart" width="400" height="400"></canvas>
+        <script type="text/javascript">
+
+  var warnColor = 'rgba(255, 0, 0, 1)';
+  var careColor = 'rgba(255, 228, 0, 1)';
+  var protectColor = 'rgba(54, 162, 235, 1)';
+
+  Chart.pluginService.register({
+    beforeUpdate: function(chartInstance) {
+      chartInstance.data.datasets.forEach(function(dataset) {
+        dataset.backgroundColor = dataset.data.map(function(data) {
+          if ( data >= 70) return warnColor;
+          else if ( data >= 50 && data < 70 ) return careColor;
+          else return protectColor;
+        })
+      })
+    }
+  });
+
+
+  var ctx = $('#myChart')
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+      data: {
+        labels: ["CPU Usage", "Memory Usage", "Network Usage", "Disk Usage", "SysvIPC Count"],
+        datasets: [{
+          label: ['Usage Status'],
+          data: [12, 70, 3, 5, 50],
+          borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+                  onClick: barClickEvent,
+                  legend: {
+                    position: 'bottom'
+                  },
+                  // barPercentage: 1.0,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 100,
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+    });
+    // alert(myChart.data.datasets[0].data)
+    function barClickEvent(event, array){
+      // var activePoints = myChart.getElementsAtEvent(event);
+      var activePoints = myChart.getElementsAtEvent(event);
+
+      switch (activePoints[0]._index) {
+        case 0: window.location = 'http://www.naver.com';
+          break;
+        case 1: window.location = 'http://www.daum.net';
+          break;
+        case 2: window.location = 'http://www.google.com';
+          break;
+        case 3: window.location = 'http://www.yahoo.com';
+          break;
+        case 4: window.location = 'http://www.npmjs.com';
+          break;
+        default: window.location = '/';
+
+      }
+      // alert(activePoints[0]._index)
+      // if ( activePoints[0]._index === 0 )
+      //   window.location = 'http://www.naver.com';
+    }
+        </script>
+      </div>
+    </div>
+
+  </div>
+  <script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
+
+
+  </script>
+</body>
+</html>
